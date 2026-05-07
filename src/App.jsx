@@ -1,0 +1,176 @@
+import "./App.css";
+import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Register from "./components/Register";
+import Login from "./components/Login";
+import Home from "./components/Home";
+import CheckboxDemo from "./components/CheckboxDemo";
+import TextboxDemo from "./components/TextboxDemo";
+import TablesDemo from "./components/TablesDemo";
+import NotFound from "./components/NotFound";
+import Cart from "./components/Cart";
+
+function App() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [cartCount, setCartCount] = useState(0);
+  const [wishlistCount, setWishlistCount] = useState(0);
+  const [cartHighlight, setCartHighlight] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    console.log("Searching for:", searchTerm);
+  };
+
+  const addToCart = (product) => {
+    setCartItems(prevItems => {
+      const existingItem = prevItems.find(item => item.id === product.id);
+      let newItems;
+      if (existingItem) {
+        newItems = prevItems.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      } else {
+        newItems = [...prevItems, { ...product, quantity: 1 }];
+      }
+      
+      const totalCount = newItems.reduce((total, item) => total + item.quantity, 0);
+      setCartCount(totalCount);
+      
+      return newItems;
+    });
+
+    setCartHighlight(true);
+    setTimeout(() => setCartHighlight(false), 1000);
+  };
+
+  const removeFromCart = (productId) => {
+    setCartItems(prevItems => {
+      const newItems = prevItems.filter(item => item.id !== productId);
+      const totalCount = newItems.reduce((total, item) => total + item.quantity, 0);
+      setCartCount(totalCount);
+      return newItems;
+    });
+  };
+
+  const updateQuantity = (productId, newQuantity) => {
+    if (newQuantity <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+    
+    setCartItems(prevItems => {
+      const newItems = prevItems.map(item =>
+        item.id === productId
+          ? { ...item, quantity: newQuantity }
+          : item
+      );
+      const totalCount = newItems.reduce((total, item) => total + item.quantity, 0);
+      setCartCount(totalCount);
+      return newItems;
+    });
+  };
+
+  const handleBuyNow = () => {
+    if (cartItems.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
+    alert(`Proceeding to checkout with ${cartCount} items`);
+  };
+
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
+
+  return (
+    <Router>
+      <div className="app">
+        <header className="header">
+          <div className="top-bar">
+            <div className="logo">
+              <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <h1>algoshack Demo App</h1>
+              </Link>
+            </div>
+            <div className="user-actions">
+              <Link to="/register" className="register-link">Register</Link>
+              <span className="separator">|</span>
+              <Link to="/login" className="login-link">Login</Link>
+              <div 
+                className={`cart-info ${cartHighlight ? 'cart-highlight' : ''}`}
+                onClick={toggleCart}
+                style={{ cursor: 'pointer' }}
+              >
+                <span className="cart-icon">🛒</span>
+                <span className="cart-count">({cartCount})</span>
+              </div>
+              <div className="wishlist-info">
+                <span className="wishlist-icon">❤️</span>
+                <span className="wishlist-count">({wishlistCount})</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="search-section">
+            <form onSubmit={handleSearch} className="search-form">
+              <input
+                type="text"
+                placeholder="Search store"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+              <button type="submit" className="search-button">Search</button>
+            </form>
+          </div>
+        </header>
+
+        <nav className="categories">
+          <ul className="category-list">
+            <li>
+              <Link to="/category/checkbox">CHECKBOX</Link>
+            </li>
+            <li>
+              <Link to="/category/textbox">TEXTBOX</Link>
+            </li>
+            <li>
+              <Link to="/category/button">BUTTON</Link>
+            </li>
+            <li>
+              <Link to="/category/tables">TABLES</Link>
+            </li>
+            <li>
+              <Link to="/category/dropdown">DROPDOWN</Link>
+            </li>
+          </ul>
+        </nav>
+
+        <Routes>
+          <Route path="/" element={<Home addToCart={addToCart} cartCount={cartCount} />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/category/checkbox" element={<CheckboxDemo />} />
+          <Route path="/category/textbox" element={<TextboxDemo />} />
+          <Route path="/category/tables" element={<TablesDemo />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+
+        <Cart 
+          cartItems={cartItems}
+          cartCount={cartCount}
+          isOpen={isCartOpen}
+          onClose={toggleCart}
+          onRemoveItem={removeFromCart}
+          onUpdateQuantity={updateQuantity}
+          onBuyNow={handleBuyNow}
+        />
+      </div>
+    </Router>
+  );
+}
+
+export default App;

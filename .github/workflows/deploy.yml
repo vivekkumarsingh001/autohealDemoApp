@@ -1,0 +1,57 @@
+name: Deploy Webshop
+
+on:
+  push:
+    branches:
+      - main  # change if needed
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Cache npm
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            npm-${{ runner.os }}-
+
+      - name: Clean install
+        run: |
+          rm -rf node_modules dist
+          npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify build output
+        run: ls -la dist
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist  # ensure your build outputs here
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
