@@ -7,7 +7,7 @@ const Home = ({ addToCart, cartCount }) => {
     {
       id: 3,
       name: "Sample Product 3",
-      price: "$79.99",
+      price: "$89.99",
       icon: "👟",
       category: "Shoes",
       addedToCart: false,
