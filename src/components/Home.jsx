@@ -4,14 +4,7 @@ import "./Home.css";
 // Make sure to accept props
 const Home = ({ addToCart, cartCount }) => {
   const [products, setProducts] = useState([
-    {
-      id: 3,
-      name: "Sample Product 3",
-      price: "$89.99",
-      icon: "👟",
-      category: "Socks",
-      addedToCart:false,
-    },
+
     {
       id: 1,
       name: "Sample Product 1",
@@ -27,6 +20,14 @@ const Home = ({ addToCart, cartCount }) => {
       icon: "📚",
       category: "Books",
       addedToCart: false,
+    },
+        {
+      id: 3,
+      name: "Sample Product 3",
+      price: "$89.99",
+      icon: "👟",
+      category: "Socks",
+      addedToCart:false,
     },
     {
       id: 2,
