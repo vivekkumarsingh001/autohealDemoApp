@@ -7,15 +7,15 @@ const Home = ({ addToCart, cartCount }) => {
 
     {
       id: 1,
-      name: "Sample Product 1",
-      price: "$39.99",
-      icon: "📦",
+      name: "Bluetooth Speaker",
+      price: "$79.99",
+      icon: "🔊",
       category: "Electronics",
       addedToCart: false,
     },
     {
       id: 4,
-      name: "Sample Product 4",
+      name: "Books",
       price: "$19.99",
       icon: "📚",
       category: "Books",
@@ -23,7 +23,7 @@ const Home = ({ addToCart, cartCount }) => {
     },
         {
       id: 3,
-      name: "Sample Product 3",
+      name: "Socks",
       price: "$89.99",
       icon: "👟",
       category: "Socks",
@@ -31,7 +31,7 @@ const Home = ({ addToCart, cartCount }) => {
     },
     {
       id: 5,
-      name: "Sample Product 2",
+      name: "Box",
       price: "$29.99",
       icon: "📦",
       category: "Boxxx",
