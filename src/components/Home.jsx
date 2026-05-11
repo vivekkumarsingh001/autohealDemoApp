@@ -13,14 +13,6 @@ const Home = ({ addToCart, cartCount }) => {
       category: "Electronics",
       addedToCart: false,
     },
-    {
-      id: 4,
-      name: "Books",
-      price: "$19.99",
-      icon: "📚",
-      category: "Books",
-      addedToCart: false,
-    },
         {
       id: 3,
       name: "Socks",
@@ -51,6 +43,14 @@ const Home = ({ addToCart, cartCount }) => {
       price: "$29.99",
       icon: "🖱️",
       category: "Electronics",
+      addedToCart: false,
+    },
+        {
+      id: 4,
+      name: "Books",
+      price: "$19.99",
+      icon: "📚",
+      category: "Books",
       addedToCart: false,
     },
     {
