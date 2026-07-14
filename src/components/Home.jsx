@@ -45,7 +45,7 @@ const Home = ({ addToCart, cartCount }) => {
       category: "Electronics",
       addedToCart: false,
     },
-        {
+     {
       id: 4,
       name: "Books",
       price: "$19.99",
