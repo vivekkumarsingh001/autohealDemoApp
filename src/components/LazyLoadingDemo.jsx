@@ -200,7 +200,7 @@ const LazyLoadingDemo = ({ addToCart, toggleWishlist, wishlistedIds = [] }) => {
               <option value="0">Ultra-fast (0ms)</option>
               <option value="500">Fast 3G (500ms)</option>
               <option value="1200">Slow 3G (1.2s)</option>
-              <option value="2500">Poor Connection (2.5s)</option>
+              <option value="20000">Poor Connection (20s)</option>
             </select>
           </div>
 
