@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import React, { useState, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Register from "./components/Register";
 import Login from "./components/Login";
@@ -10,10 +10,51 @@ import TablesDemo from "./components/TablesDemo";
 import NotFound from "./components/NotFound";
 import Cart from "./components/Cart";
 
+const LazyLoadingDemo = lazy(() => import("./components/LazyLoadingDemo"));
+
+const RouteSpinner = () => (
+  <div className="route-spinner-container" style={{
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '60vh',
+    gap: '1rem'
+  }}>
+    <div className="spinner" style={{
+      width: '40px',
+      height: '40px',
+      border: '4px solid rgba(170, 59, 255, 0.1)',
+      borderTop: '4px solid #aa3bff',
+      borderRadius: '50%',
+      animation: 'spin 1s linear infinite'
+    }}></div>
+    <span style={{ color: '#6b6375', fontWeight: 550 }}>Loading Showcase Module...</span>
+    <style>{`
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `}</style>
+  </div>
+);
+
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
+  const [wishlistedIds, setWishlistedIds] = useState([]);
+
+  const toggleWishlist = (productId) => {
+    setWishlistedIds((prev) => {
+      const isAlreadyWishlisted = prev.includes(productId);
+      const newWishlist = isAlreadyWishlisted
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId];
+      setWishlistCount(newWishlist.length);
+      return newWishlist;
+    });
+  };
   const [cartHighlight, setCartHighlight] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -146,6 +187,9 @@ function App() {
             <li>
               <Link to="/category/dropdown">DROPDOWN</Link>
             </li>
+            <li>
+              <Link to="/category/lazy-loading">LAZY LOADING</Link>
+            </li>
           </ul>
         </nav>
 
@@ -156,6 +200,15 @@ function App() {
           <Route path="/category/checkbox" element={<CheckboxDemo />} />
           <Route path="/category/textbox" element={<TextboxDemo />} />
           <Route path="/category/tables" element={<TablesDemo />} />
+          <Route path="/category/lazy-loading" element={
+            <Suspense fallback={<RouteSpinner />}>
+              <LazyLoadingDemo 
+                addToCart={addToCart} 
+                toggleWishlist={toggleWishlist}
+                wishlistedIds={wishlistedIds}
+              />
+            </Suspense>
+          } />
           <Route path="*" element={<NotFound />} />
         </Routes>
 
