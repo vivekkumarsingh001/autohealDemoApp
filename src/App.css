@@ -52,16 +52,28 @@
   color: #ddd;
 }
 
-.cart-info, .wishlist-info {
+.cart-info, .wishlist-info, .refresh-info {
   display: inline-flex;
   align-items: center;
   margin-left: 0.5rem;
   color: #666;
 }
 
-.cart-icon, .wishlist-icon {
+.cart-icon, .wishlist-icon, .refresh-icon {
   font-size: 1rem;
   margin-right: 0.2rem;
+}
+
+.refresh-info {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+}
+
+.refresh-info:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  transform: scale(1.08);
 }
 
 /* Search Section */

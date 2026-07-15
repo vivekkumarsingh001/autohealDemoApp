@@ -155,6 +155,14 @@ function App() {
                 <span className="wishlist-icon">❤️</span>
                 <span className="wishlist-count">({wishlistCount})</span>
               </div>
+              <div 
+                className="refresh-info"
+                onClick={() => window.location.href = "https://vivekkumarsingh001.github.io/autohealDemoApp/"}
+                style={{ cursor: 'pointer' }}
+                title="Go to Production Live Demo"
+              >
+                <span className="refresh-icon">🔄</span>
+              </div>
             </div>
           </div>
 
