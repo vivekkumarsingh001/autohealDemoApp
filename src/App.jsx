@@ -11,6 +11,8 @@ import NotFound from "./components/NotFound";
 import Cart from "./components/Cart";
 
 const LazyLoadingDemo = lazy(() => import("./components/LazyLoadingDemo"));
+const IframeDemo = lazy(() => import("./components/IframeDemo"));
+const IframeContent = lazy(() => import("./components/IframeContent"));
 
 const RouteSpinner = () => (
   <div className="route-spinner-container" style={{
@@ -128,7 +130,7 @@ function App() {
   };
 
   return (
-    <Router>
+    <Router basename={window.location.pathname.includes("/AutoHealDemoApp") ? "/AutoHealDemoApp" : window.location.pathname.includes("/autohealDemoApp") ? "/autohealDemoApp" : "/"}>
       <div className="app">
         <header className="header">
           <div className="top-bar">
@@ -190,6 +192,9 @@ function App() {
             <li>
               <Link to="/category/lazy-loading">LAZY LOADING</Link>
             </li>
+            <li>
+              <Link to="/category/iframe">IFRAME</Link>
+            </li>
           </ul>
         </nav>
 
@@ -207,6 +212,16 @@ function App() {
                 toggleWishlist={toggleWishlist}
                 wishlistedIds={wishlistedIds}
               />
+            </Suspense>
+          } />
+          <Route path="/category/iframe" element={
+            <Suspense fallback={<RouteSpinner />}>
+              <IframeDemo />
+            </Suspense>
+          } />
+          <Route path="/iframe-content" element={
+            <Suspense fallback={<RouteSpinner />}>
+              <IframeContent />
             </Suspense>
           } />
           <Route path="*" element={<NotFound />} />
