@@ -13,6 +13,7 @@ import Cart from "./components/Cart";
 const LazyLoadingDemo = lazy(() => import("./components/LazyLoadingDemo"));
 const IframeDemo = lazy(() => import("./components/IframeDemo"));
 const IframeContent = lazy(() => import("./components/IframeContent"));
+const ShadowDomDemo = lazy(() => import("./components/ShadowDomDemo"));
 
 const RouteSpinner = () => (
   <div className="route-spinner-container" style={{
@@ -203,6 +204,9 @@ function App() {
             <li>
               <Link to="/category/iframe">IFRAME</Link>
             </li>
+            <li>
+              <Link to="/category/shadow-dom">SHADOW DOM</Link>
+            </li>
           </ul>
         </nav>
 
@@ -230,6 +234,11 @@ function App() {
           <Route path="/iframe-content" element={
             <Suspense fallback={<RouteSpinner />}>
               <IframeContent />
+            </Suspense>
+          } />
+          <Route path="/category/shadow-dom" element={
+            <Suspense fallback={<RouteSpinner />}>
+              <ShadowDomDemo />
             </Suspense>
           } />
           <Route path="*" element={<NotFound />} />
