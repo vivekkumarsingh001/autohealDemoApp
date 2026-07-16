@@ -102,6 +102,14 @@ const LazyLoadingDemo = ({ addToCart, toggleWishlist, wishlistedIds = [] }) => {
   
   const [selectedItem, setSelectedItem] = useState(null);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
+  const [modalDelay, setModalDelay] = useState(2); // Default 2 seconds
+  const [isModalAdding, setIsModalAdding] = useState(false);
+
+  const closeModal = () => {
+    setSelectedItem(null);
+    setIsAddedToCart(false);
+    setIsModalAdding(false);
+  };
 
   const observerRef = useRef(null);
   const sentinelRef = useRef(null);
@@ -318,11 +326,11 @@ const LazyLoadingDemo = ({ addToCart, toggleWishlist, wishlistedIds = [] }) => {
       )}
 
       {selectedItem && (
-        <div className="popup-overlay" onClick={() => setSelectedItem(null)}>
+        <div className="popup-overlay" onClick={closeModal}>
           <div className="popup-modal" onClick={(e) => e.stopPropagation()}>
             <div className="popup-header">
               <h3>{isAddedToCart ? "Item Added Successfully!" : "Add Item to Cart"}</h3>
-              <button className="popup-close-x" onClick={() => setSelectedItem(null)}>✕</button>
+              <button className="popup-close-x" onClick={closeModal}>✕</button>
             </div>
             <div className="popup-body">
               <div className="popup-product-info">
@@ -342,33 +350,74 @@ const LazyLoadingDemo = ({ addToCart, toggleWishlist, wishlistedIds = [] }) => {
                   ? `Successfully added "${selectedItem.title}" to your shopping cart. You can continue browsing.` 
                   : `Are you sure you want to add "${selectedItem.title}" to your shopping cart?`}
               </p>
+
+              {/* Success Button Delay Dropdown */}
+              {!isAddedToCart && (
+                <div className="popup-delay-group">
+                  <label htmlFor="popup-delay-select">⏳ Success Button Delay:</label>
+                  <select
+                    id="popup-delay-select"
+                    className="popup-delay-select"
+                    value={modalDelay}
+                    onChange={(e) => setModalDelay(Number(e.target.value))}
+                    disabled={isModalAdding}
+                  >
+                    <option value="2">2 Seconds</option>
+                    <option value="5">5 Seconds</option>
+                    <option value="8">8 Seconds</option>
+                    <option value="10">10 Seconds</option>
+                    <option value="15">15 Seconds</option>
+                    <option value="20">20 Seconds</option>
+                    <option value="30">30 Seconds</option>
+                    <option value="60">60 Seconds</option>
+                  </select>
+                </div>
+              )}
             </div>
             <div className="popup-footer">
               {!isAddedToCart ? (
                 <>
-                  <button className="popup-btn cancel" onClick={() => setSelectedItem(null)}>
+                  <button 
+                    className="popup-btn cancel" 
+                    onClick={closeModal}
+                    disabled={isModalAdding}
+                  >
                     Cancel
                   </button>
-                  <button className="popup-btn confirm" onClick={() => {
-                    if (addToCart && typeof addToCart === 'function') {
-                      addToCart({
-                        id: `lazy-${selectedItem.id}`,
-                        name: selectedItem.title,
-                        price: selectedItem.price,
-                        icon: selectedItem.category === "Gadgets" ? "🔊" : 
-                              selectedItem.category === "Workspace" ? "🖱️" : 
-                              selectedItem.category === "Lifestyle" ? "🧘" : 
-                              selectedItem.category === "Fashion" ? "🕶️" : "📦",
-                        category: selectedItem.category
-                      });
-                    }
-                    setIsAddedToCart(true);
-                  }}>
-                    Add to Cart
+                  <button 
+                    className="popup-btn confirm" 
+                    disabled={isModalAdding}
+                    onClick={() => {
+                      setIsModalAdding(true);
+                      if (addToCart && typeof addToCart === 'function') {
+                        addToCart({
+                          id: `lazy-${selectedItem.id}`,
+                          name: selectedItem.title,
+                          price: selectedItem.price,
+                          icon: selectedItem.category === "Gadgets" ? "🔊" : 
+                                selectedItem.category === "Workspace" ? "🖱️" : 
+                                selectedItem.category === "Lifestyle" ? "🧘" : 
+                                selectedItem.category === "Fashion" ? "🕶️" : "📦",
+                          category: selectedItem.category
+                        });
+                      }
+                      setTimeout(() => {
+                        setIsAddedToCart(true);
+                        setIsModalAdding(false);
+                      }, modalDelay * 1000);
+                    }}
+                  >
+                    {isModalAdding ? (
+                      <>
+                        <span className="spinner-indicator"></span> Adding...
+                      </>
+                    ) : (
+                      "Add to Cart"
+                    )}
                   </button>
                 </>
               ) : (
-                <button className="popup-btn continue" onClick={() => setSelectedItem(null)}>
+                <button className="popup-btn continue" onClick={closeModal}>
                   Continue
                 </button>
               )}
