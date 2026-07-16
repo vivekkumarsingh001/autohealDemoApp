@@ -14,6 +14,8 @@ const LazyLoadingDemo = lazy(() => import("./components/LazyLoadingDemo"));
 const IframeDemo = lazy(() => import("./components/IframeDemo"));
 const IframeContent = lazy(() => import("./components/IframeContent"));
 const ShadowDomDemo = lazy(() => import("./components/ShadowDomDemo"));
+const ButtonDemo = lazy(() => import("./components/ButtonDemo"));
+const DropdownDemo = lazy(() => import("./components/DropdownDemo"));
 
 const RouteSpinner = () => (
   <div className="route-spinner-container" style={{
@@ -239,6 +241,16 @@ function App() {
           <Route path="/category/shadow-dom" element={
             <Suspense fallback={<RouteSpinner />}>
               <ShadowDomDemo />
+            </Suspense>
+          } />
+          <Route path="/category/button" element={
+            <Suspense fallback={<RouteSpinner />}>
+              <ButtonDemo />
+            </Suspense>
+          } />
+          <Route path="/category/dropdown" element={
+            <Suspense fallback={<RouteSpinner />}>
+              <DropdownDemo />
             </Suspense>
           } />
           <Route path="*" element={<NotFound />} />
