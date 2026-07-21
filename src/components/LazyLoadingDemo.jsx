@@ -370,6 +370,8 @@ const LazyLoadingDemo = ({ addToCart, toggleWishlist, wishlistedIds = [] }) => {
                     <option value="20">20 Seconds</option>
                     <option value="30">30 Seconds</option>
                     <option value="60">60 Seconds</option>
+                    <option value="90">90 Seconds</option>
+                    <option value="120">120 Seconds</option>
                   </select>
                 </div>
               )}
