@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./TablesDemo.css";
 
 const TablesDemo = () => {
@@ -33,8 +33,39 @@ const TablesDemo = () => {
     { id: 5, product: "Headphones", category: "Audio", price: "$149", stock: "25", rating: "4.4" },
   ]);
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [appliedSearchTerm, setAppliedSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
+
+  // Search popup states
+  const [showSearchPopup, setShowSearchPopup] = useState(false);
+  const [searchFound, setSearchFound] = useState(false);
+  const [searchedName, setSearchedName] = useState("");
+
+  const handleSearchSubmit = () => {
+    const term = searchInput.toLowerCase().trim();
+    let found = false;
+
+    if (activeTab === "threeColumn") {
+      found = threeColumnData.some(item => 
+        item.name.toLowerCase().includes(term)
+      );
+    } else if (activeTab === "fourColumn") {
+      found = fourColumnData.some(item => 
+        item.name.toLowerCase().includes(term) ||
+        item.email.toLowerCase().includes(term)
+      );
+    } else if (activeTab === "fiveColumn") {
+      found = fiveColumnData.some(item => 
+        item.product.toLowerCase().includes(term) ||
+        item.category.toLowerCase().includes(term)
+      );
+    }
+
+    setSearchedName(searchInput);
+    setSearchFound(found);
+    setShowSearchPopup(true);
+  };
 
   const handleSelectRow = (tableId, rowId) => {
     setSelectedRows(prev => ({
@@ -95,9 +126,9 @@ const TablesDemo = () => {
   // Filter functions
   const getFilteredThreeColumnData = () => {
     let filtered = threeColumnData;
-    if (searchTerm) {
+    if (appliedSearchTerm) {
       filtered = filtered.filter(item => 
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+        item.name.toLowerCase().includes(appliedSearchTerm.toLowerCase())
       );
     }
     if (filterStatus) {
@@ -108,10 +139,10 @@ const TablesDemo = () => {
 
   const getFilteredFourColumnData = () => {
     let filtered = fourColumnData;
-    if (searchTerm) {
+    if (appliedSearchTerm) {
       filtered = filtered.filter(item => 
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.email.toLowerCase().includes(searchTerm.toLowerCase())
+        item.name.toLowerCase().includes(appliedSearchTerm.toLowerCase()) ||
+        item.email.toLowerCase().includes(appliedSearchTerm.toLowerCase())
       );
     }
     if (filterStatus) {
@@ -122,10 +153,10 @@ const TablesDemo = () => {
 
   const getFilteredFiveColumnData = () => {
     let filtered = fiveColumnData;
-    if (searchTerm) {
+    if (appliedSearchTerm) {
       filtered = filtered.filter(item => 
-        item.product.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.category.toLowerCase().includes(searchTerm.toLowerCase())
+        item.product.toLowerCase().includes(appliedSearchTerm.toLowerCase()) ||
+        item.category.toLowerCase().includes(appliedSearchTerm.toLowerCase())
       );
     }
     return filtered;
@@ -195,7 +226,8 @@ const TablesDemo = () => {
               className={`tab-btn ${activeTab === "threeColumn" ? "active" : ""}`}
               onClick={() => {
                 setActiveTab("threeColumn");
-                setSearchTerm("");
+                setSearchInput("");
+                setAppliedSearchTerm("");
                 setFilterStatus("");
               }}
             >
@@ -205,7 +237,8 @@ const TablesDemo = () => {
               className={`tab-btn ${activeTab === "fourColumn" ? "active" : ""}`}
               onClick={() => {
                 setActiveTab("fourColumn");
-                setSearchTerm("");
+                setSearchInput("");
+                setAppliedSearchTerm("");
                 setFilterStatus("");
               }}
             >
@@ -215,7 +248,8 @@ const TablesDemo = () => {
               className={`tab-btn ${activeTab === "fiveColumn" ? "active" : ""}`}
               onClick={() => {
                 setActiveTab("fiveColumn");
-                setSearchTerm("");
+                setSearchInput("");
+                setAppliedSearchTerm("");
                 setFilterStatus("");
               }}
             >
@@ -225,7 +259,8 @@ const TablesDemo = () => {
               className={`tab-btn ${activeTab === "emptyTable" ? "active" : ""}`}
               onClick={() => {
                 setActiveTab("emptyTable");
-                setSearchTerm("");
+                setSearchInput("");
+                setAppliedSearchTerm("");
                 setFilterStatus("");
               }}
             >
@@ -251,13 +286,23 @@ const TablesDemo = () => {
                 </div>
               </div>
               <div className="table-controls">
-                <input 
-                  type="text" 
-                  placeholder="Search products..." 
-                  className="table-search"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                <div className="search-controls-wrapper">
+                  <input 
+                    type="text" 
+                    placeholder="Search products..." 
+                    className="table-search"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSearchSubmit();
+                      }
+                    }}
+                  />
+                  <button className="table-search-btn" onClick={handleSearchSubmit}>
+                    Search
+                  </button>
+                </div>
                 <select 
                   className="table-filter"
                   value={filterStatus}
@@ -337,13 +382,23 @@ const TablesDemo = () => {
                 </div>
               </div>
               <div className="table-controls">
-                <input 
-                  type="text" 
-                  placeholder="Search users..." 
-                  className="table-search"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                <div className="search-controls-wrapper">
+                  <input 
+                    type="text" 
+                    placeholder="Search users..." 
+                    className="table-search"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSearchSubmit();
+                      }
+                    }}
+                  />
+                  <button className="table-search-btn" onClick={handleSearchSubmit}>
+                    Search
+                  </button>
+                </div>
                 <select 
                   className="table-filter"
                   value={filterStatus}
@@ -425,13 +480,23 @@ const TablesDemo = () => {
                 </div>
               </div>
               <div className="table-controls">
-                <input 
-                  type="text" 
-                  placeholder="Search products..." 
-                  className="table-search"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                <div className="search-controls-wrapper">
+                  <input 
+                    type="text" 
+                    placeholder="Search products..." 
+                    className="table-search"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSearchSubmit();
+                      }
+                    }}
+                  />
+                  <button className="table-search-btn" onClick={handleSearchSubmit}>
+                    Search
+                  </button>
+                </div>
               </div>
               <div className="table-responsive">
                 <table className="data-table">
@@ -556,6 +621,32 @@ const TablesDemo = () => {
           </div>
         </div>
       </div>
+
+      {/* Search Result Popup Overlay */}
+      {showSearchPopup && (
+        <div className="search-popup-overlay">
+          <div className={`search-popup-card ${searchFound ? "found" : "not-found"}`}>
+            <span className="search-popup-icon">
+              {searchFound ? "🎉" : "🔍"}
+            </span>
+            <h3>{searchFound ? "Product Found" : "Product Not Found"}</h3>
+            <p className="search-popup-message">
+              {searchFound 
+                ? `We found matching results for "${searchedName}" in the table!`
+                : `Sorry, we couldn't find any results matching "${searchedName}".`}
+            </p>
+            <button 
+              className="search-popup-ok-btn"
+              onClick={() => {
+                setAppliedSearchTerm(searchInput);
+                setShowSearchPopup(false);
+              }}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
