@@ -8,7 +8,7 @@ const TablesDemo = () => {
 
   // Sample data for 3-column table
   const [threeColumnData, setThreeColumnData] = useState([
-    // { id: 1, name: "Product A", price: "$29.99", stock: "In Stock" },
+    { id: 1, name: "Product A", price: "$29.99", stock: "In Stock" },
     { id: 2, name: "Product B", price: "$49.99", stock: "Low Stock" },
     { id: 3, name: "Product C", price: "$19.99", stock: "Out of Stock" },
     { id: 4, name: "Product D", price: "$99.99", stock: "In Stock" },
