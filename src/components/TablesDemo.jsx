@@ -642,7 +642,7 @@ const TablesDemo = () => {
                 setShowSearchPopup(false);
               }}
             >
-              Go For It
+              OK
             </button>
           </div>
         </div>
