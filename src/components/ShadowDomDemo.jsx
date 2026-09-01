@@ -372,14 +372,14 @@ const ShadowDomDemo = () => {
                     />
                     <label htmlFor="shadow-checkbox">Confirm shadow subscription</label>
                   </div>
-
+{/* 
                   <button
                     type="submit"
                     id="shadow-action-btn"
                     className="shadow-btn-submit"
                   >
                     Submit Shadow Form
-                  </button>
+                  </button> */}
                 </form>
               ) : (
                 <div className="shadow-form-group">
